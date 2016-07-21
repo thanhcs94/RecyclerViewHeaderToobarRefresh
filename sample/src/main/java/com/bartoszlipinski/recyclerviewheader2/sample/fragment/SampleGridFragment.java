@@ -20,7 +20,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,12 +39,13 @@ import com.bartoszlipinski.recyclerviewheader2.sample.adapter.ColorItemsAdapter;
  * Created by Bartosz Lipinski
  * 01.04.15
  */
-public class SampleGridFragment extends Fragment {
+public class SampleGridFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerViewHeader recyclerHeader;
     private RecyclerView recycler;
     private Toolbar tToolbar;
     int TOOLBAR_ELEVATION = 4;
+    SwipeRefreshLayout swipeLayout;
     public static SampleGridFragment newInstance() {
         SampleGridFragment fragment = new SampleGridFragment();
         return fragment;
@@ -56,6 +59,12 @@ public class SampleGridFragment extends Fragment {
     }
 
     private void setupViews(View view) {
+        swipeLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         recycler = (RecyclerView) view.findViewById(R.id.recycler);
         tToolbar = (Toolbar)view.findViewById(R.id.toolbar_top);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -125,6 +134,13 @@ public class SampleGridFragment extends Fragment {
         });
     }
 
+    @Override public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                swipeLayout.setRefreshing(false);
+            }
+        }, 5000);
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void toolbarSetElevation(float elevation) {
