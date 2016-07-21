@@ -59,6 +59,7 @@ public class MainActivity extends FragmentActivity {
                 case 0:
                     return SampleListFragment.newInstance();
                 case 1:
+                    //add toolbar and swipe refresh !
                     return SampleGridFragment.newInstance();
                 case 2:
                     return SampleListReversedFragment.newInstance();
